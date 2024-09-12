@@ -1,0 +1,29 @@
+﻿<Window
+    x:Class="TPV.Vista.VentanaCierreCaja"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TPV.Vista"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="VentanaCierreCaja"
+    Width="800"
+    Height="450"
+    mc:Ignorable="d">
+    <Grid>
+        <GroupBox Margin="48,37,462,272" Header="Efectivo">
+            <Grid>
+                <Label Margin="0,10,228,66" Content="Total:" />
+            </Grid>
+        </GroupBox>
+
+        <Button
+            x:Name="btnCerrar"
+            Width="54"
+            Height="27"
+            Margin="355,0,0,32"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Content="Cerrar"
+            RenderTransformOrigin="0.458,-0.441" />
+    </Grid>
+</Window>

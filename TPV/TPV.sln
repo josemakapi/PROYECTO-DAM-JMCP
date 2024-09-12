@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35303.130
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPV", "TPV.csproj", "{3110305F-4500-4482-9FB9-383D30DEBFAE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPV", "TPV.csproj", "{BCDCAAAD-191E-47B8-B948-57E70BB7A295}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,17 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3110305F-4500-4482-9FB9-383D30DEBFAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3110305F-4500-4482-9FB9-383D30DEBFAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3110305F-4500-4482-9FB9-383D30DEBFAE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{3110305F-4500-4482-9FB9-383D30DEBFAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3110305F-4500-4482-9FB9-383D30DEBFAE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3110305F-4500-4482-9FB9-383D30DEBFAE}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{BCDCAAAD-191E-47B8-B948-57E70BB7A295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCDCAAAD-191E-47B8-B948-57E70BB7A295}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCDCAAAD-191E-47B8-B948-57E70BB7A295}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCDCAAAD-191E-47B8-B948-57E70BB7A295}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {E81D38F5-2AFF-425B-8F4B-B5EFDC355946}
+		SolutionGuid = {C8C3908D-4DEC-4822-BA9E-912BE6F6CF53}
 	EndGlobalSection
 EndGlobal
