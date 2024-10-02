@@ -31,9 +31,10 @@ namespace TPV.Vista
             this.Close();
         }
 
-        private void btnCancelarCobro_Click(object sender, RoutedEventArgs e)
+        private void btnCobrar_Click(object sender, RoutedEventArgs e)
         {
-
+            string mensaje = ControladorComun.TpvBase!.GeneraTicket();
+            MessageBox.Show(this,"Ticket: "+mensaje);
         }
     }
 }

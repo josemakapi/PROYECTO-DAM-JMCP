@@ -57,6 +57,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Click="btnVolver_Click"
-            Content="Cerrar" />
+            Content="Cerrar"
+            Style="{StaticResource BlueButtonStyle}" />
     </Grid>
 </Window>

@@ -22,14 +22,14 @@
             </Grid>
         </GroupBox>
         <CheckBox x:Name="chkNube" Content="BD en la nube" HorizontalAlignment="Left" Margin="447,159,0,0" VerticalAlignment="Top" IsChecked="True" Checked="chkNube_Checked" Unchecked="chkNube_Unchecked"/>
-        <Button x:Name="btnConectar" Content="Conectar" HorizontalAlignment="Left" Margin="335,154,0,0" VerticalAlignment="Top" Height="25" Width="76" Click="btnConectar_Click" Grid.Column="1"/>
+        <Button x:Name="btnConectar" Content="Conectar" HorizontalAlignment="Left" Margin="335,154,0,0" VerticalAlignment="Top" Height="25" Width="98" Click="btnConectar_Click"/>
 
         <GroupBox x:Name="grpTienda" Header="Seleccione tienda" Margin="67,217,81,84">
             <Grid HorizontalAlignment="Left" Width="647">
                 <ComboBox x:Name="cmbBTiendas" Margin="186,31,188,0" VerticalAlignment="Top" ItemsSource="{Binding Tiendas}" DisplayMemberPath="Descripcion"/>
             </Grid>
         </GroupBox>
-        <Button x:Name="btnTienda" Content="Confirmar tienda" HorizontalAlignment="Left" Margin="319,355,0,0" VerticalAlignment="Top" Height="25" Width="108" RenderTransformOrigin="0.472,0.602" Click="btnTienda_Click" Grid.Column="1"/>
+        <Button x:Name="btnTienda" Content="Confirmar tienda" HorizontalAlignment="Left" Margin="319,355,0,0" VerticalAlignment="Top" Height="32" Width="147" RenderTransformOrigin="0.472,0.602" Click="btnTienda_Click"/>
 
 
     </Grid>

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
@@ -70,6 +71,12 @@ namespace TPV.Controlador
         }
 
         private bool CompruebaAperturaCaja()
+        {
+
+            return true;
+        }
+
+        private bool AbrirCaja()
         {
             return true;
         }
@@ -165,9 +172,61 @@ namespace TPV.Controlador
             _productos = ControladorComun.BD!.BuscarObjetosInt<Producto>("CodTienda", _tpvCFG.CodTienda).ToList();
         }
 
-        public bool GeneraTicket()
+        public string GeneraTicket()
         {
-            return true;
+            string numTicket = RecibirNumTicketDesdeMaster();
+            return numTicket;
+        }
+
+        public string RecibirNumTicketDesdeMaster()
+        {
+            try
+            {
+                TcpClient client = new TcpClient();
+                client.Connect(ControladorComun.TiendaActual!.IPTPVMaster, 12700);
+                NetworkStream stream = client.GetStream();
+                MemoryStream ms = new MemoryStream();
+                byte[] buffer = new byte[1024];
+                int bytesLeidos;
+                while ((bytesLeidos = stream.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, bytesLeidos);
+                }
+                byte[] msgEncriptado = ms.ToArray();           
+                client.Close();
+
+                return DecryptData(msgEncriptado, ControladorComun.ClaveCompartida, ControladorComun.Iv); ;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al conectar con TPVMaster: " + ex.Message);
+                return string.Empty;
+            }
+        }
+
+        private string DecryptData(byte[] data, byte[] key, byte[] iv)
+        {
+
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = key;
+                aesAlg.IV = iv;
+                aesAlg.Mode = CipherMode.CBC;
+                aesAlg.Padding = PaddingMode.PKCS7;
+
+                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                using (MemoryStream msDecrypt = new MemoryStream(data))
+                {
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        {
+                            return srDecrypt.ReadToEnd();
+                        }
+                    }
+                }
+            }
         }
 
         public bool FinTPV()
@@ -271,42 +330,13 @@ namespace TPV.Controlador
             }
         }
 
-        public async Task<string> RecibirNumTicketDesdeMaster()
-        {
-            try
-            {
-                using (TcpClient client = new TcpClient(ControladorComun.TiendaActual!.IPTPVMaster, 12700))
-                {
-
-                    NetworkStream stream = client.GetStream();
-                    byte[] _claveCompartida = Encoding.UTF8.GetBytes(DateTime.Now.ToString("ddMMyyyy"));
-                    // Leer los datos cifrados del stream
-                    byte[] encryptedData = new byte[client.ReceiveBufferSize];
-                    int bytesRead = await stream.ReadAsync(encryptedData, 0, encryptedData.Length);
-
-                    // Desencriptar los datos
-                    byte[] decryptedData = DecryptData(encryptedData, _claveCompartida);
-
-                    // Convertir los datos desencriptados a string
-                    string numTicket = Encoding.UTF8.GetString(decryptedData, 0, bytesRead);
-
-                    return numTicket;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error al recibir el stream desde TPVMaster: " + ex.Message);
-                return string.Empty;
-            }
-        }
-
-        private byte[] DecryptData(byte[] data, byte[] key)
+        private static byte[] DecryptData(byte[] data, byte[] key)
         {
             using (Aes aesAlg = Aes.Create())
             {
                 aesAlg.Key = key;
                 aesAlg.Mode = CipherMode.ECB;
-                aesAlg.Padding = PaddingMode.PKCS7;
+                aesAlg.Padding = PaddingMode.None;
 
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 

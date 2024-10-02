@@ -14,15 +14,18 @@ namespace TPV.Modelo
         private DateTime _fechaHora;
         public DateTime FechaHora { get { return _fechaHora; } set { _fechaHora = value; } }
         private string _numTicket;
-        public string NumTicket { get { return _numTicket; } set { _numTicket = value; } }
+        public string NumTicket { get {                 
+                return this._tipo.ToString()+this._codTienda+this._numTPV+this._soloNumero; } }
+        private long _soloNumero;
+        public long SoloNumero { get { return _soloNumero; } set { _soloNumero = value; } }
         private char _tipo;
         public char Tipo { get { return _tipo; } set { _tipo = value; } } //T = Ticket normal, D = Devolucion
         private int _numTPV;
         public int NumTPV { get { return _numTPV; } set { _numTPV = value; } }
         private Usuario _vendedor;
         public Usuario Vendedor { get { return _vendedor; } set { _vendedor = value; } }
-        private int _ejercicio;
-        public int Ejercicio { get { return _ejercicio; } set { _ejercicio = value; } }
+        private int _codTienda;
+        public int CodTienda { get { return _codTienda; } set { _codTienda = value; } }
         private string _tienda;
         public string Tienda { get { return _tienda; } set { _tienda = value; } }
         private List<Linea> _lineasPantalla;
@@ -35,14 +38,14 @@ namespace TPV.Modelo
         public List<Vencimiento> Vencimientos { get { return _vencimientos; } set { _vencimientos = value; } }
 
 
-        public Ticket(char tipo, int numTPV, int ejercicio, string tienda, Usuario vendedor)
+        public Ticket(char tipo, int numTPV, int codTienda, Usuario vendedor)
         {
             this._id = ControladorComun.BD!.SelectMAXInt("Ticket", "_id") + 1;
             this._fechaHora = DateTime.Now;
             this._tipo = tipo;
             this._numTPV = numTPV;
-            this._ejercicio = ejercicio;
-            this._tienda = tienda;
+            this._codTienda = codTienda;
+            this._tienda = ControladorComun.BD!.BuscarObjetosInt<Tienda>("CodTienda",codTienda)[0].Descripcion!;
             this._lineasPantalla = ControladorComun.TpvBase!.PosicionVentaActual!.LineasPantalla;
             this._numTicket = char.ToUpper(this._tipo).ToString() + this._tienda + this._id.ToString().PadLeft(8, '0');
             this._vencimientos = new List<Vencimiento>();

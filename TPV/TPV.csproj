@@ -26,6 +26,7 @@
     <None Remove="Recursos\Imagenes\Productos\ru6.png" />
     <None Remove="Recursos\Imagenes\Productos\sr507.png" />
     <None Remove="Recursos\Imagenes\profile.png" />
+    <None Remove="Recursos\Imagenes\Temas\fondoOriginal.png" />
     <None Remove="Recursos\Imagenes\test2.png" />
     <None Remove="Recursos\Imagenes\test3.jpg" />
     <None Remove="Recursos\Imagenes\testlcd.webp" />
@@ -58,6 +59,7 @@
     <Resource Include="Recursos\Imagenes\Productos\ru6.png" />
     <Resource Include="Recursos\Imagenes\Productos\sr507.png" />
     <Resource Include="Recursos\Imagenes\profile.png" />
+    <Resource Include="Recursos\Imagenes\Temas\fondoOriginal.png" />
     <Resource Include="Recursos\Imagenes\test2.png" />
     <Resource Include="Recursos\Imagenes\test3.jpg" />
     <Resource Include="Recursos\Imagenes\testlcd.webp" />

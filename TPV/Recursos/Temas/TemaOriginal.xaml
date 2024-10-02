@@ -1,0 +1,52 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--  Estilo para ventanas  -->
+    <Style TargetType="Window">
+        <Setter Property="Background">
+            <Setter.Value>
+                <ImageBrush ImageSource="/Recursos/Imagenes/Temas/fondoOriginal.png" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="FontFamily" Value="Arial" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <!--  Recurso estático para los Grid  -->
+    <SolidColorBrush x:Key="GridBackgroundBrush" Color="#F0F0F0" />
+    <!--  Estilo para Grid que usa el recurso estático  -->
+    <Style TargetType="Grid">
+        <Setter Property="Background" Value="{StaticResource GridBackgroundBrush}" />
+    </Style>
+
+    <!--  Recurso dinámico para botones azules  -->
+    <SolidColorBrush x:Key="BotonesAzules" Color="#2196F3" />
+
+    <!--  Recurso estático para el fondo de los botones predeterminados  -->
+    <SolidColorBrush x:Key="BotonBlancoBrush" Color="White" />
+
+    <!--  Estilo predeterminado para todos los botones (fondo blanco)  -->
+    <Style TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource BotonBlancoBrush}" />
+        <Setter Property="Foreground" Value="Black" />
+        <!--  Color de texto negro  -->
+        <Setter Property="BorderBrush" Value="#D3D3D3" />
+        <Setter Property="FontFamily" Value="Arial" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="Margin" Value="5" />
+    </Style>
+
+
+
+    <!--  Estilo para botones azules usando el recurso dinámico, con clave  -->
+    <Style x:Key="BlueButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource BotonesAzules}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderBrush" Value="#D3D3D3" />
+        <Setter Property="FontFamily" Value="Arial" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="Margin" Value="5" />
+    </Style>
+
+</ResourceDictionary>

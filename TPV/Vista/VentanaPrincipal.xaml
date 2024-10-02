@@ -12,6 +12,9 @@
     ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary Source="../Recursos/Temas/TemaOriginal.xaml" />
+    </Window.Resources>
     <Grid Margin="3,0,-3,0">
         <TabControl
             x:Name="tabControl"

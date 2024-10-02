@@ -326,7 +326,7 @@ namespace TPV.Datos
                 // Realiza la actualización del documento
                 var result = collection.ReplaceOne(filter, objeto);
 
-                // Verifica si la operación fue exitosa
+                // True si ok
                 return result.IsAcknowledged && result.ModifiedCount > 0;
             }
             catch (Exception)
@@ -368,19 +368,20 @@ namespace TPV.Datos
             }
             return 0;
         }
-        public string SelectMAXTicketT(int _ejercicio, int _numTienda)
+        public string SelectMAXTicketT(int _numTienda)
         {
             try
             {
                 IMongoCollection<Ticket> collection = this._dbTPV!.GetCollection<Ticket>(typeof(Ticket).Name);
                 var filterBuilder = Builders<Ticket>.Filter;
                 //var filter = filterBuilder.Eq("_ejercicio", _ejercicio) & filterBuilder.Eq("_tienda", _numTienda) & filterBuilder.Regex("_numTicket", new BsonRegularExpression("^T\\d+$"));
-                var filter = filterBuilder.Eq("_ejercicio", _ejercicio) & filterBuilder.Eq("_tienda", _numTienda);
-                var sort = Builders<Ticket>.Sort.Descending("_numTicket");
-                var document = collection.Find(filter).Project(Builders<Ticket>.Projection.Include("_numTicket")).Sort(sort).FirstOrDefault();
+                //var filter = filterBuilder.Eq("_ejercicio", _ejercicio) & filterBuilder.Eq("_tienda", _numTienda);
+                var filter = filterBuilder.Eq("Tienda", _numTienda);
+                var sort = Builders<Ticket>.Sort.Descending("SoloNumero");
+                var document = collection.Find(filter).Project(Builders<Ticket>.Projection.Include("NumTicket")).Sort(sort).FirstOrDefault();
                 if (document != null)
                 {
-                    return document.GetElement("_numTicket").Value.AsString;
+                    return document.GetElement("NumTicket").Value.AsString;
                 }
             }
             catch (Exception)

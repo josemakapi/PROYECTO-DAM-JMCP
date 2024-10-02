@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,15 +19,24 @@ namespace TPV.Controlador
     /// </summary>
     public static class ControladorComun
     {
+        public static String NombreBD = "TPVJMCP";
         public static TPVBase? TpvBase;
         public static BDMongo? BD;
         public static Tienda? TiendaActual;
         public static List<Tienda>? Tiendas;
+        public static byte[] Iv = new byte[16] { 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0, 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0 };
+        public static byte[] ClaveCompartida = new byte[]
+{
+    0xA5, 0xB9, 0xC1, 0x3D, 0x4F, 0x2A, 0x1B, 0xE6,
+    0x9F, 0x0A, 0x47, 0x81, 0xD3, 0xE5, 0xC4, 0x72,
+    0x3B, 0xF8, 0x52, 0xD7, 0xE1, 0x91, 0x98, 0x63,
+    0xAC, 0x6B, 0xE3, 0xA9, 0x45, 0xCD, 0xF1, 0x8E
+};
 
         public static bool IniciarBD(string host, int puerto, string user, string pass)
         {
             BD = new BDMongo(host, puerto, user, pass);
-            if (!BD.ConectarBDDirecta("TPVJMCP"))
+            if (!BD.ConectarBDDirecta(NombreBD))
             {
                 return false;
             }
@@ -35,7 +45,7 @@ namespace TPV.Controlador
         public static bool IniciarBD(string user, string pass)
         {
             BD = new BDMongo(user, pass);
-            if (!BD.ConectarBDCloud("TPVJMCP"))
+            if (!BD.ConectarBDCloud(NombreBD))
             {
                 return false;
             }
@@ -97,6 +107,7 @@ namespace TPV.Controlador
             bitmap.EndInit();
             return bitmap;
         }
+
 
         //public static LineaPantalla DimeUltimaLinea(List<LineaPantalla> listaLineas)
         //{

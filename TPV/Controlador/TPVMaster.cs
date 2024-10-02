@@ -19,21 +19,19 @@ namespace TPV.Controlador
         private SemaphoreSlim _bloqueo = new SemaphoreSlim(1, 1);
         public bool IsRunning { get { return _isRunning; } }
 
-        // Clave compartida entre el cliente y el servidor:
-        private byte[] _claveCompartida = Encoding.UTF8.GetBytes(DateTime.Now.ToString("ddMMyyyy"));
-
         public TPVMaster()
         {
-            _isRunning = false;
+            this._isRunning = false;
             Iniciar();
         }
 
         public bool Iniciar()
         {
-            if (!_isRunning)
+            if (!this._isRunning)
             {
                 try
                 {
+                    //this._tcpListener = await _tcpListener.AcceptTcpClientAsync()
                     Listener();
                 }
                 catch (Exception)
@@ -47,46 +45,41 @@ namespace TPV.Controlador
 
         public void Parar()
         {
-            if (_isRunning)
+            if (this._isRunning)
             {
-                _isRunning = false;
+                this._isRunning = false;
                 MessageBox.Show("Cerrando procesos master");
             }
         }
 
-        private int Listener()
+        private async Task <int> Listener()
         {
             this._isRunning = true;
             int estado = 1;
+            
+            this._tcpListener = new TcpListener(IPAddress.Any, 12700);
+            this._tcpListener.Start();
 
-            _tcpListener = new TcpListener(IPAddress.Any, 12700);
-            _tcpListener.Start();
-            MessageBox.Show("A la escucha de llamadas");
-
-            while (_isRunning)
-            {
-                TcpClient? _cliente = null;
+            while (this._isRunning)
+            {              
                 try
                 {
-                    _cliente = _tcpListener.AcceptTcpClient();
-                    MessageBox.Show("Cliente conectado");
+                    TcpClient cliente = await this._tcpListener.AcceptTcpClientAsync();
+                    MessageBox.Show("Cliente " + cliente.Client.RemoteEndPoint.ToString() + " conectado");
 
                     // Procesar el cliente
-                    _hiloCliente = new Thread(async () => await ProcesarCliente(_cliente));
-                    _hiloCliente.Start();
+                    _ = Task.Run(() => ProcesarCliente(cliente));
+                    //this._hiloCliente = new Thread(async () => await ProcesarCliente(cliente)); //Vetusto, C# no funciona bien usando Thread. En su lugar, uso Task.Run
+                    //this._hiloCliente.Start();
                 }
                 catch (InvalidOperationException) { return -2; }
                 catch (Exception)
                 {
                     return -1;
                 }
-                finally
-                {
-                    _cliente!.Close();
-                }
             }
 
-            _tcpListener!.Stop();
+            this._tcpListener!.Stop();
             estado = 0;
             return estado;
         }
@@ -96,20 +89,22 @@ namespace TPV.Controlador
             try
             {
                 NetworkStream stream = cliente.GetStream();
-                await _bloqueo.WaitAsync();
+                await this._bloqueo.WaitAsync();
                 try
                 {
                     // Cifrar el número de ticket más alto antes de enviarlo
-                    string lastTicketNum = ControladorComun.BD!.SelectMAXTicketT(2024,1);
-                    byte[] data = Encoding.UTF8.GetBytes(lastTicketNum);
-                    byte[] encryptedData = EncryptData(data, _claveCompartida); //Aquí encriptamos los datos
+                    string lastTicketNum = ControladorComun.BD!.SelectMAXTicketT(ControladorComun.TiendaActual!.CodTienda);
+                    lastTicketNum = "99999"; // Prueba
+                    byte[] numTicketEnBytes = Encoding.UTF8.GetBytes(lastTicketNum);
+                    byte[] iv = new byte[16] { 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0, 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0 };
+                    byte[] encryptedData = EncryptData(lastTicketNum, ControladorComun.ClaveCompartida, ControladorComun.Iv); //Aquí encriptamos los datos
 
                     // Enviar los datos cifrados al cliente
-                    await stream.WriteAsync(encryptedData, 0, encryptedData.Length);
+                    await stream.WriteAsync(encryptedData.ToArray().AsMemory(0, encryptedData.Length));                  
                 }
                 finally
                 {
-                    _bloqueo.Release();
+                    this._bloqueo.Release();
                 }
 
                 stream.Close();
@@ -122,13 +117,13 @@ namespace TPV.Controlador
             }
         }
 
-        // Método para cifrar los datos
-        private byte[] EncryptData(byte[] data, byte[] key)
+        private byte[] EncryptData(string numTicket, byte[] key, byte[] iv)
         {
             using (Aes aesAlg = Aes.Create())
             {
                 aesAlg.Key = key;
-                aesAlg.Mode = CipherMode.ECB;
+                aesAlg.IV = iv;
+                aesAlg.Mode = CipherMode.CBC;
                 aesAlg.Padding = PaddingMode.PKCS7;
 
                 ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
@@ -137,10 +132,13 @@ namespace TPV.Controlador
                 {
                     using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
                     {
-                        csEncrypt.Write(data, 0, data.Length);
-                        csEncrypt.FlushFinalBlock();
-                        return msEncrypt.ToArray();
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            swEncrypt.Write(numTicket);
+                        }
                     }
+                    byte[] msgCryptEnviar = msEncrypt.ToArray();
+                    return msgCryptEnviar;
                 }
             }
         }
